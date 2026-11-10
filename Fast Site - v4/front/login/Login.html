@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Craft - Autenticação & Cadastro</title>
+    
+    <link rel="stylesheet" href="login.css">
+
+    <style>
+        :root {
+            --primary: #FFB800;
+            --dark: #111111;
+            --light: #FFFFFF;
+            --card-bg: #1E1E1E;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-header {
+            background-color: var(--primary);
+            color: var(--dark);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 6px solid var(--dark);
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+
+        .student-info {
+            font-size: 0.95rem;
+        }
+
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-flat {
+            background-color: var(--card-bg);
+            border: 5px solid var(--primary);
+            padding: 35px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 10px 10px 0px var(--primary);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background-color: var(--dark);
+            color: var(--light);
+            border: 3px solid var(--primary);
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: var(--dark);
+            border-color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 4px solid var(--dark);
+            background-color: var(--light);
+            color: #000;
+            font-size: 1rem;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .btn-flat {
+            width: 100%;
+            background-color: var(--primary);
+            color: var(--dark);
+            border: 4px solid var(--dark);
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px var(--dark);
+            margin-top: 10px;
+        }
+
+        .btn-flat:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px var(--dark);
+        }
+
+        .alert-box {
+            padding: 12px;
+            border: 3px solid #FFF;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .alert-error { background-color: #E63946; color: #FFF; }
+        .alert-success { background-color: #2A9D8F; color: #FFF; }
+    </style>
+</head>
+<body>
+
+    <header class="brand-header">
+        <div class="brand-title">🍔 BURGER CRAFT</div>
+        <div class="student-info">Projeto Integrador SENAI | Aluno: Gerffeson</div>
+    </header>
+
+    <main class="login-container">
+        <div class="card-flat">
+            
+            <div class="tab-buttons">
+                <button id="tab-login-btn" class="tab-btn active" onclick="alternarAba('login')">ENTRAR</button>
+                <button id="tab-register-btn" class="tab-btn" onclick="alternarAba('register')">CRIAR NOVO LOGIN</button>
+            </div>
+
+            <div id="alert-msg" class="alert-box" style="display: none;"></div>
+
+
+            <form id="login-form">
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Acesso ao Sistema</h2>
+                <div class="form-group">
+                    <label for="usuario">Usuário:</label>
+                    <input type="text" id="usuario" placeholder="Ex: admin" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-flat">ENTRAR NO SISTEMA</button>
+            </form>
+
+
+            <form id="register-form" style="display: none;">
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Novo Usuário</h2>
+                <div class="form-group">
+                    <label for="reg-usuario">Novo Usuário:</label>
+                    <input type="text" id="reg-usuario" placeholder="Ex: gerencia" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-senha">Nova Senha:</label>
+                    <input type="password" id="reg-senha" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-confirma-senha">Confirmar Senha:</label>
+                    <input type="password" id="reg-confirma-senha" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-flat">CADASTRAR LOGIN</button>
+            </form>
+
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "http://localhost:8080/api";
+
+        function alternarAba(aba) {
+            const loginForm = document.getElementById("login-form");
+            const registerForm = document.getElementById("register-form");
+            const tabLoginBtn = document.getElementById("tab-login-btn");
+            const tabRegisterBtn = document.getElementById("tab-register-btn");
+            ocultarAlerta();
+
+            if (aba === 'login') {
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                tabLoginBtn.classList.add("active");
+                tabRegisterBtn.classList.remove("active");
+            } else {
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                tabRegisterBtn.classList.add("active");
+                tabLoginBtn.classList.remove("active");
+            }
+        }
+
+        function exibirAlerta(texto, tipo) {
+            const alert = document.getElementById("alert-msg");
+            alert.innerText = texto;
+            alert.className = `alert-box alert-${tipo}`;
+            alert.style.display = "block";
+        }
+
+        function ocultarAlerta() {
+            document.getElementById("alert-msg").style.display = "none";
+        }
+
+        document.getElementById("login-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            ocultarAlerta();
+
+            const usuario = document.getElementById("usuario").value;
+            const senha = document.getElementById("senha").value;
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                if (response.ok) {
+                    window.location.href = "bem-vindo.html";
+                } else {
+                    exibirAlerta("❌ Usuário ou senha incorretos!", "error");
+                }
+            } catch (err) {
+                exibirAlerta("⚠️ Erro ao conectar ao servidor Back-end.", "error");
+            }
+        });
+
+        document.getElementById("register-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            ocultarAlerta();
+
+            const usuario = document.getElementById("reg-usuario").value;
+            const senha = document.getElementById("reg-senha").value;
+            const confirmaSenha = document.getElementById("reg-confirma-senha").value;
+
+            if (senha !== confirmaSenha) {
+                exibirAlerta("⚠️ As senhas digitadas não coincidem!", "error");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/usuarios`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 201) {
+                    exibirAlerta("✅ Login cadastrado com sucesso!", "success");
+                    document.getElementById("register-form").reset();
+                    setTimeout(() => alternarAba('login'), 2000);
+                } else {
+                    exibirAlerta(`❌ ${data.message || 'Erro ao cadastrar usuário.'}`, "error");
+                }
+            } catch (err) {
+                exibirAlerta("⚠️ Erro ao conectar ao servidor Back-end.", "error");
+            }
+        });
+    </script>
+</body>
+</html>

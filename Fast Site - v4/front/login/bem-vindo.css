@@ -1,0 +1,86 @@
+:root {
+    --primary: #FFB800;
+    --dark: #111111;
+    --light: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial Black', sans-serif;
+    background-color: var(--dark);
+    color: var(--light);
+    overflow-x: hidden;
+}
+
+.brand-header {
+    background-color: var(--primary);
+    color: var(--dark);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 6px solid var(--dark);
+}
+
+.brand-title {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+}
+
+.hero-session {
+    height: calc(100vh - 75px);
+    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero-content {
+    background-color: rgba(17, 17, 17, 0.9);
+    border: 6px solid var(--primary);
+    padding: 50px 40px;
+    max-width: 750px;
+    box-shadow: 12px 12px 0px var(--primary);
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    font-weight: normal;
+    color: #DDD;
+}
+
+.btn-hero {
+    display: inline-block;
+    background-color: var(--primary);
+    color: var(--dark);
+    text-decoration: none;
+    border: 4px solid var(--dark);
+    padding: 16px 32px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 6px 6px 0px var(--dark);
+    transition: all 0.1s ease;
+}
+
+.btn-hero:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0px var(--dark);
+}

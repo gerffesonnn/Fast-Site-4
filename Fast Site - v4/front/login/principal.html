@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página principal</title>
+    <link rel="stylesheet" href="bem-vindo.css">
+</head>
+<body>
+    <main>
+        <h1>Bem-vindo, <span id="user-name"></span>!</h1>
+        <p>Você entrou no sistema. Acesse a área de cadastro para continuar.</p>
+        <a class="primary-link" href="cadastro.html">Abrir cadastro de clientes</a>
+        <button id="logout" type="button">Sair</button>
+        <p id="message" role="alert" aria-live="polite"></p>
+    </main>
+    <script>
+        const BASE_URL = "http://127.0.0.1:8080";
+        const message = document.querySelector("#message");
+
+        async function loadSession() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/auth/session`, {
+                    cache: "no-store",
+                    credentials: "include",
+                });
+                const session = await response.json();
+                if (!response.ok || !session.authenticated) {
+                    window.location.replace("Login.html");
+                    return;
+                }
+                document.querySelector("#user-name").textContent = session.name;
+            } catch (error) {
+                console.error("Não foi possível verificar o login:", error);
+                message.textContent = "Não foi possível verificar sua sessão. Entre novamente.";
+                window.location.replace("Login.html");
+            }
+        }
+
+        document.querySelector("#logout").addEventListener("click", async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/api/auth/logout`, {
+                    method: "POST",
+                    credentials: "include",
+                });
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                window.location.replace("Login.html");
+            } catch (error) {
+                console.error("Não foi possível sair:", error);
+                message.textContent = "Não foi possível sair. Tente novamente.";
+            }
+        });
+
+        loadSession();
+    </script>
+</body>
+</html>
